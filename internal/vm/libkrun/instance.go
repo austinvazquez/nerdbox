@@ -410,6 +410,11 @@ func (v *vmInstance) Shutdown(ctx context.Context) error {
 	if v.handler == 0 {
 		return fmt.Errorf("libkrun already closed")
 	}
+	for _, cb := range v.shutdownCallbacks {
+		if err := cb(ctx); err != nil {
+			log.G(ctx).WithError(err).Warn("Error during shutdown callback")
+		}
+	}
 	err := purego.Dlclose(v.handler)
 	if err != nil {
 		return err
