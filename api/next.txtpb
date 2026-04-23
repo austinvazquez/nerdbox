@@ -72,7 +72,7 @@ file: {
       span: 16
       span: 0
       span: 18
-      leading_detached_comments: "\nCopyright The containerd Authors.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
+      leading_detached_comments: "\nCopyright The containerd Authors.\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\nhttp://www.apache.org/licenses/LICENSE-2.0\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
     }
     location: {
       path: 2
@@ -115,8 +115,8 @@ file: {
       path: 2
       path: 0
       span: 23
-      span: 8
-      span: 59
+      span: 4
+      span: 55
     }
     location: {
       path: 6
@@ -125,8 +125,8 @@ file: {
       path: 0
       path: 1
       span: 23
-      span: 12
-      span: 18
+      span: 8
+      span: 14
     }
     location: {
       path: 6
@@ -135,8 +135,8 @@ file: {
       path: 0
       path: 2
       span: 23
-      span: 19
-      span: 32
+      span: 15
+      span: 28
     }
     location: {
       path: 6
@@ -145,8 +145,8 @@ file: {
       path: 0
       path: 3
       span: 23
-      span: 43
-      span: 57
+      span: 39
+      span: 53
     }
     location: {
       path: 4
@@ -169,19 +169,19 @@ file: {
       path: 0
       path: 2
       path: 0
+      path: 5
       span: 27
-      span: 8
-      span: 22
+      span: 4
+      span: 10
     }
     location: {
       path: 4
       path: 0
       path: 2
       path: 0
-      path: 5
       span: 27
-      span: 8
-      span: 14
+      span: 4
+      span: 18
     }
     location: {
       path: 4
@@ -190,8 +190,8 @@ file: {
       path: 0
       path: 1
       span: 27
-      span: 15
-      span: 17
+      span: 11
+      span: 13
     }
     location: {
       path: 4
@@ -200,17 +200,8 @@ file: {
       path: 0
       path: 3
       span: 27
-      span: 20
-      span: 21
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
-      span: 28
-      span: 8
-      span: 37
+      span: 16
+      span: 17
     }
     location: {
       path: 4
@@ -219,8 +210,17 @@ file: {
       path: 1
       path: 6
       span: 28
-      span: 8
-      span: 26
+      span: 4
+      span: 22
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      span: 28
+      span: 4
+      span: 33
     }
     location: {
       path: 4
@@ -229,8 +229,8 @@ file: {
       path: 1
       path: 1
       span: 28
-      span: 27
-      span: 32
+      span: 23
+      span: 28
     }
     location: {
       path: 4
@@ -239,8 +239,8 @@ file: {
       path: 1
       path: 3
       span: 28
-      span: 35
-      span: 36
+      span: 31
+      span: 32
     }
     location: {
       path: 4
@@ -263,19 +263,19 @@ file: {
       path: 1
       path: 2
       path: 0
-      span: 32
-      span: 8
-      span: 26
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 0
       path: 5
       span: 32
-      span: 8
-      span: 14
+      span: 4
+      span: 10
+    }
+    location: {
+      path: 4
+      path: 1
+      path: 2
+      path: 0
+      span: 32
+      span: 4
+      span: 22
     }
     location: {
       path: 4
@@ -284,8 +284,8 @@ file: {
       path: 0
       path: 1
       span: 32
-      span: 15
-      span: 21
+      span: 11
+      span: 17
     }
     location: {
       path: 4
@@ -294,8 +294,8 @@ file: {
       path: 0
       path: 3
       span: 32
-      span: 24
-      span: 25
+      span: 20
+      span: 21
     }
   }
   syntax: "proto3"
@@ -393,7 +393,7 @@ file: {
       span: 16
       span: 0
       span: 18
-      leading_detached_comments: "\nCopyright The containerd Authors.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
+      leading_detached_comments: "\nCopyright The containerd Authors.\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\nhttp://www.apache.org/licenses/LICENSE-2.0\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
     }
     location: {
       path: 2
@@ -436,8 +436,8 @@ file: {
       path: 2
       path: 0
       span: 23
-      span: 8
-      span: 65
+      span: 4
+      span: 61
     }
     location: {
       path: 6
@@ -446,8 +446,8 @@ file: {
       path: 0
       path: 1
       span: 23
-      span: 12
-      span: 20
+      span: 8
+      span: 16
     }
     location: {
       path: 6
@@ -456,8 +456,8 @@ file: {
       path: 0
       path: 2
       span: 23
-      span: 21
-      span: 36
+      span: 17
+      span: 32
     }
     location: {
       path: 6
@@ -466,27 +466,27 @@ file: {
       path: 0
       path: 3
       span: 23
-      span: 47
-      span: 63
+      span: 43
+      span: 59
     }
     location: {
       path: 6
       path: 0
       path: 2
+      path: 1
+      span: 24
+      span: 4
+      span: 58
+    }
+    location: {
+      path: 6
+      path: 0
+      path: 2
+      path: 1
       path: 1
       span: 24
       span: 8
-      span: 62
-    }
-    location: {
-      path: 6
-      path: 0
-      path: 2
-      path: 1
-      path: 1
-      span: 24
-      span: 12
-      span: 19
+      span: 15
     }
     location: {
       path: 6
@@ -495,8 +495,8 @@ file: {
       path: 1
       path: 2
       span: 24
-      span: 20
-      span: 34
+      span: 16
+      span: 30
     }
     location: {
       path: 6
@@ -505,8 +505,8 @@ file: {
       path: 1
       path: 3
       span: 24
-      span: 45
-      span: 60
+      span: 41
+      span: 56
     }
     location: {
       path: 4
@@ -529,19 +529,19 @@ file: {
       path: 0
       path: 2
       path: 0
+      path: 5
       span: 28
-      span: 8
-      span: 36
+      span: 4
+      span: 10
     }
     location: {
       path: 4
       path: 0
       path: 2
       path: 0
-      path: 5
       span: 28
-      span: 8
-      span: 14
+      span: 4
+      span: 32
     }
     location: {
       path: 4
@@ -550,147 +550,147 @@ file: {
       path: 0
       path: 1
       span: 28
+      span: 11
       span: 15
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 0
+      path: 3
+      span: 28
+      span: 30
+      span: 31
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      path: 5
+      span: 29
+      span: 4
+      span: 10
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      span: 29
+      span: 4
+      span: 32
+      trailing_comments: " in-VM path or virtiofs tag"
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      path: 1
+      span: 29
+      span: 11
+      span: 17
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      path: 3
+      span: 29
+      span: 30
+      span: 31
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 2
+      path: 5
+      span: 30
+      span: 4
+      span: 10
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 2
+      span: 30
+      span: 4
+      span: 32
+      trailing_comments: " in-VM path"
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 2
+      path: 1
+      span: 30
+      span: 11
+      span: 17
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 2
+      path: 3
+      span: 30
+      span: 30
+      span: 31
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 3
+      path: 4
+      span: 31
+      span: 4
+      span: 12
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 3
+      span: 31
+      span: 4
+      span: 32
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 3
+      path: 5
+      span: 31
+      span: 13
       span: 19
     }
     location: {
       path: 4
       path: 0
       path: 2
-      path: 0
       path: 3
-      span: 28
-      span: 34
-      span: 35
+      path: 1
+      span: 31
+      span: 20
+      span: 27
     }
     location: {
       path: 4
       path: 0
       path: 2
-      path: 1
-      span: 29
-      span: 8
-      span: 36
-      trailing_comments: " in-VM path or virtiofs tag\n"
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
-      path: 5
-      span: 29
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
-      path: 1
-      span: 29
-      span: 15
-      span: 21
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
       path: 3
-      span: 29
-      span: 34
-      span: 35
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 2
+      path: 3
+      span: 31
       span: 30
-      span: 8
-      span: 36
-      trailing_comments: " in-VM path\n"
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 2
-      path: 5
-      span: 30
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 2
-      path: 1
-      span: 30
-      span: 15
-      span: 21
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 2
-      path: 3
-      span: 30
-      span: 34
-      span: 35
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
       span: 31
-      span: 8
-      span: 36
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
-      path: 4
-      span: 31
-      span: 8
-      span: 16
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
-      path: 5
-      span: 31
-      span: 17
-      span: 23
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
-      path: 1
-      span: 31
-      span: 24
-      span: 31
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
-      path: 3
-      span: 31
-      span: 34
-      span: 35
     }
     location: {
       path: 4
@@ -713,19 +713,19 @@ file: {
       path: 1
       path: 2
       path: 0
+      path: 4
       span: 35
-      span: 8
-      span: 38
+      span: 4
+      span: 12
     }
     location: {
       path: 4
       path: 1
       path: 2
       path: 0
-      path: 4
       span: 35
-      span: 8
-      span: 16
+      span: 4
+      span: 34
     }
     location: {
       path: 4
@@ -734,8 +734,8 @@ file: {
       path: 0
       path: 6
       span: 35
-      span: 17
-      span: 26
+      span: 13
+      span: 22
     }
     location: {
       path: 4
@@ -744,8 +744,8 @@ file: {
       path: 0
       path: 1
       span: 35
-      span: 27
-      span: 33
+      span: 23
+      span: 29
     }
     location: {
       path: 4
@@ -754,8 +754,8 @@ file: {
       path: 0
       path: 3
       span: 35
-      span: 36
-      span: 37
+      span: 32
+      span: 33
     }
     location: {
       path: 4
@@ -793,20 +793,20 @@ file: {
       path: 3
       path: 2
       path: 0
+      path: 5
       span: 41
-      span: 8
-      span: 26
-      trailing_comments: " in-VM path\n"
+      span: 4
+      span: 10
     }
     location: {
       path: 4
       path: 3
       path: 2
       path: 0
-      path: 5
       span: 41
-      span: 8
-      span: 14
+      span: 4
+      span: 22
+      trailing_comments: " in-VM path"
     }
     location: {
       path: 4
@@ -815,8 +815,8 @@ file: {
       path: 0
       path: 1
       span: 41
-      span: 15
-      span: 21
+      span: 11
+      span: 17
     }
     location: {
       path: 4
@@ -825,8 +825,8 @@ file: {
       path: 0
       path: 3
       span: 41
-      span: 24
-      span: 25
+      span: 20
+      span: 21
     }
     location: {
       path: 4
@@ -946,7 +946,7 @@ file: {
       span: 16
       span: 0
       span: 18
-      leading_detached_comments: "\nCopyright The containerd Authors.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
+      leading_detached_comments: "\nCopyright The containerd Authors.\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\nhttp://www.apache.org/licenses/LICENSE-2.0\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
     }
     location: {
       path: 2
@@ -997,8 +997,8 @@ file: {
       path: 2
       path: 0
       span: 43
-      span: 8
-      span: 62
+      span: 4
+      span: 58
       leading_comments: " Bind sets up the socket forward entries on the VM side. The VM creates\n UNIX listener sockets at the paths given in socket_path. This RPC returns\n only after all socket files have been created, so the caller can safely\n proceed with container creation (crun bind mounts).\n"
     }
     location: {
@@ -1008,8 +1008,8 @@ file: {
       path: 0
       path: 1
       span: 43
+      span: 8
       span: 12
-      span: 16
     }
     location: {
       path: 6
@@ -1018,8 +1018,8 @@ file: {
       path: 0
       path: 2
       span: 43
-      span: 17
-      span: 28
+      span: 13
+      span: 24
     }
     location: {
       path: 6
@@ -1028,8 +1028,8 @@ file: {
       path: 0
       path: 3
       span: 43
-      span: 39
-      span: 60
+      span: 35
+      span: 56
     }
     location: {
       path: 6
@@ -1037,8 +1037,8 @@ file: {
       path: 2
       path: 1
       span: 51
-      span: 8
-      span: 73
+      span: 4
+      span: 69
       leading_comments: " Accept is a bidirectional streaming RPC used to coordinate forwarded\n connections. The VM sends a ConnectRequest when a container process\n connects to a forwarded socket; the host resolves the forward_id,\n dials the target host socket, opens a vsock stream, and sends back a\n ConnectResult reporting success or failure. On failure the VM closes\n the pending container connection immediately.\n"
     }
     location: {
@@ -1048,8 +1048,8 @@ file: {
       path: 1
       path: 1
       span: 51
-      span: 12
-      span: 18
+      span: 8
+      span: 14
     }
     location: {
       path: 6
@@ -1058,8 +1058,8 @@ file: {
       path: 1
       path: 5
       span: 51
-      span: 19
-      span: 25
+      span: 15
+      span: 21
     }
     location: {
       path: 6
@@ -1068,8 +1068,8 @@ file: {
       path: 1
       path: 2
       span: 51
-      span: 26
-      span: 39
+      span: 22
+      span: 35
     }
     location: {
       path: 6
@@ -1078,8 +1078,8 @@ file: {
       path: 1
       path: 6
       span: 51
-      span: 50
-      span: 56
+      span: 46
+      span: 52
     }
     location: {
       path: 6
@@ -1088,8 +1088,8 @@ file: {
       path: 1
       path: 3
       span: 51
-      span: 57
-      span: 71
+      span: 53
+      span: 67
     }
     location: {
       path: 4
@@ -1113,19 +1113,19 @@ file: {
       path: 0
       path: 2
       path: 0
+      path: 4
       span: 57
-      span: 8
-      span: 36
+      span: 4
+      span: 12
     }
     location: {
       path: 4
       path: 0
       path: 2
       path: 0
-      path: 4
       span: 57
-      span: 8
-      span: 16
+      span: 4
+      span: 32
     }
     location: {
       path: 4
@@ -1134,8 +1134,8 @@ file: {
       path: 0
       path: 6
       span: 57
-      span: 17
-      span: 23
+      span: 13
+      span: 19
     }
     location: {
       path: 4
@@ -1144,8 +1144,8 @@ file: {
       path: 0
       path: 1
       span: 57
-      span: 24
-      span: 31
+      span: 20
+      span: 27
     }
     location: {
       path: 4
@@ -1154,8 +1154,8 @@ file: {
       path: 0
       path: 3
       span: 57
-      span: 34
-      span: 35
+      span: 30
+      span: 31
     }
     location: {
       path: 4
@@ -1179,9 +1179,19 @@ file: {
       path: 1
       path: 2
       path: 0
+      path: 5
       span: 64
-      span: 8
-      span: 30
+      span: 4
+      span: 10
+    }
+    location: {
+      path: 4
+      path: 1
+      path: 2
+      path: 0
+      span: 64
+      span: 4
+      span: 26
       leading_comments: " Opaque identifier for this forward. Each side uses it to resolve the local\n socket path from its own configuration.\n"
     }
     location: {
@@ -1189,20 +1199,10 @@ file: {
       path: 1
       path: 2
       path: 0
-      path: 5
-      span: 64
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 0
       path: 1
       span: 64
-      span: 15
-      span: 25
+      span: 11
+      span: 21
     }
     location: {
       path: 4
@@ -1211,8 +1211,18 @@ file: {
       path: 0
       path: 3
       span: 64
-      span: 28
-      span: 29
+      span: 24
+      span: 25
+    }
+    location: {
+      path: 4
+      path: 1
+      path: 2
+      path: 1
+      path: 5
+      span: 69
+      span: 4
+      span: 10
     }
     location: {
       path: 4
@@ -1220,8 +1230,8 @@ file: {
       path: 2
       path: 1
       span: 69
-      span: 8
-      span: 31
+      span: 4
+      span: 27
       leading_comments: " Path of the UNIX listener socket in the VM's root filesystem (e.g.\n /run/socketfwd/{forward_id}.sock). vminitd creates the socket here;\n the shim has already rewritten the uds mount to a bind mount from\n this path to the user-specified destination inside the container.\n"
     }
     location: {
@@ -1229,20 +1239,10 @@ file: {
       path: 1
       path: 2
       path: 1
-      path: 5
-      span: 69
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 1
       path: 1
       span: 69
-      span: 15
-      span: 26
+      span: 11
+      span: 22
     }
     location: {
       path: 4
@@ -1251,8 +1251,8 @@ file: {
       path: 1
       path: 3
       span: 69
-      span: 29
-      span: 30
+      span: 25
+      span: 26
     }
     location: {
       path: 4
@@ -1276,9 +1276,19 @@ file: {
       path: 2
       path: 2
       path: 0
+      path: 5
       span: 77
-      span: 8
-      span: 29
+      span: 4
+      span: 10
+    }
+    location: {
+      path: 4
+      path: 2
+      path: 2
+      path: 0
+      span: 77
+      span: 4
+      span: 25
       leading_comments: " ID of the vsock stream. The host must open a stream with this ID after\n a successful ConnectResult so that the relay can start.\n"
     }
     location: {
@@ -1286,20 +1296,10 @@ file: {
       path: 2
       path: 2
       path: 0
-      path: 5
-      span: 77
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 2
-      path: 2
-      path: 0
       path: 1
       span: 77
-      span: 15
-      span: 24
+      span: 11
+      span: 20
     }
     location: {
       path: 4
@@ -1308,8 +1308,18 @@ file: {
       path: 0
       path: 3
       span: 77
-      span: 27
-      span: 28
+      span: 23
+      span: 24
+    }
+    location: {
+      path: 4
+      path: 2
+      path: 2
+      path: 1
+      path: 5
+      span: 81
+      span: 4
+      span: 10
     }
     location: {
       path: 4
@@ -1317,8 +1327,8 @@ file: {
       path: 2
       path: 1
       span: 81
-      span: 8
-      span: 30
+      span: 4
+      span: 26
       leading_comments: " Identifier of the socket forward entry. The host uses this to resolve the\n target host socket path from its own configuration rather than trusting a\n path supplied by the VM.\n"
     }
     location: {
@@ -1326,20 +1336,10 @@ file: {
       path: 2
       path: 2
       path: 1
-      path: 5
-      span: 81
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 2
-      path: 2
-      path: 1
       path: 1
       span: 81
-      span: 15
-      span: 25
+      span: 11
+      span: 21
     }
     location: {
       path: 4
@@ -1348,8 +1348,8 @@ file: {
       path: 1
       path: 3
       span: 81
-      span: 28
-      span: 29
+      span: 24
+      span: 25
     }
     location: {
       path: 4
@@ -1373,9 +1373,19 @@ file: {
       path: 3
       path: 2
       path: 0
+      path: 5
       span: 90
-      span: 8
-      span: 29
+      span: 4
+      span: 10
+    }
+    location: {
+      path: 4
+      path: 3
+      path: 2
+      path: 0
+      span: 90
+      span: 4
+      span: 25
       leading_comments: " ID of the vsock stream from the corresponding ConnectRequest.\n"
     }
     location: {
@@ -1383,30 +1393,30 @@ file: {
       path: 3
       path: 2
       path: 0
-      path: 5
+      path: 1
       span: 90
-      span: 8
-      span: 14
+      span: 11
+      span: 20
     }
     location: {
       path: 4
       path: 3
       path: 2
       path: 0
-      path: 1
+      path: 3
       span: 90
-      span: 15
+      span: 23
       span: 24
     }
     location: {
       path: 4
       path: 3
       path: 2
-      path: 0
-      path: 3
-      span: 90
-      span: 27
-      span: 28
+      path: 1
+      path: 5
+      span: 93
+      span: 4
+      span: 10
     }
     location: {
       path: 4
@@ -1414,8 +1424,8 @@ file: {
       path: 2
       path: 1
       span: 93
-      span: 8
-      span: 25
+      span: 4
+      span: 21
       leading_comments: " Non-empty if the host failed to dial the target socket. The VM closes\n the pending connection when error is set.\n"
     }
     location: {
@@ -1423,30 +1433,20 @@ file: {
       path: 3
       path: 2
       path: 1
-      path: 5
+      path: 1
       span: 93
-      span: 8
-      span: 14
+      span: 11
+      span: 16
     }
     location: {
       path: 4
       path: 3
       path: 2
       path: 1
-      path: 1
+      path: 3
       span: 93
-      span: 15
+      span: 19
       span: 20
-    }
-    location: {
-      path: 4
-      path: 3
-      path: 2
-      path: 1
-      path: 3
-      span: 93
-      span: 23
-      span: 24
     }
   }
   syntax: "proto3"
@@ -1499,7 +1499,7 @@ file: {
       span: 16
       span: 0
       span: 18
-      leading_detached_comments: "\nCopyright The containerd Authors.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
+      leading_detached_comments: "\nCopyright The containerd Authors.\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\nhttp://www.apache.org/licenses/LICENSE-2.0\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
     }
     location: {
       path: 2
@@ -1549,8 +1549,8 @@ file: {
       path: 2
       path: 0
       span: 25
-      span: 8
-      span: 63
+      span: 4
+      span: 59
     }
     location: {
       path: 6
@@ -1559,8 +1559,8 @@ file: {
       path: 0
       path: 1
       span: 25
+      span: 8
       span: 12
-      span: 16
     }
     location: {
       path: 6
@@ -1569,8 +1569,8 @@ file: {
       path: 0
       path: 2
       span: 25
-      span: 17
-      span: 38
+      span: 13
+      span: 34
     }
     location: {
       path: 6
@@ -1579,8 +1579,8 @@ file: {
       path: 0
       path: 3
       span: 25
-      span: 49
-      span: 61
+      span: 45
+      span: 57
     }
     location: {
       path: 4
@@ -1603,19 +1603,19 @@ file: {
       path: 0
       path: 2
       path: 0
+      path: 5
       span: 29
-      span: 8
-      span: 27
+      span: 4
+      span: 10
     }
     location: {
       path: 4
       path: 0
       path: 2
       path: 0
-      path: 5
       span: 29
-      span: 8
-      span: 14
+      span: 4
+      span: 23
     }
     location: {
       path: 4
@@ -1624,37 +1624,37 @@ file: {
       path: 0
       path: 1
       span: 29
-      span: 15
+      span: 11
+      span: 18
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 0
+      path: 3
+      span: 29
+      span: 21
       span: 22
     }
     location: {
       path: 4
       path: 0
       path: 2
-      path: 0
-      path: 3
-      span: 29
-      span: 25
-      span: 26
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
-      span: 30
-      span: 8
-      span: 34
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
       path: 1
       path: 5
       span: 30
-      span: 8
-      span: 14
+      span: 4
+      span: 10
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      span: 30
+      span: 4
+      span: 30
     }
     location: {
       path: 4
@@ -1663,8 +1663,8 @@ file: {
       path: 1
       path: 1
       span: 30
-      span: 15
-      span: 29
+      span: 11
+      span: 25
     }
     location: {
       path: 4
@@ -1673,8 +1673,8 @@ file: {
       path: 1
       path: 3
       span: 30
-      span: 32
-      span: 33
+      span: 28
+      span: 29
     }
   }
   syntax: "proto3"
@@ -1712,7 +1712,7 @@ file: {
       span: 16
       span: 0
       span: 18
-      leading_detached_comments: "\nCopyright The containerd Authors.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
+      leading_detached_comments: "\nCopyright The containerd Authors.\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\nhttp://www.apache.org/licenses/LICENSE-2.0\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
     }
     location: {
       path: 2
@@ -1769,8 +1769,8 @@ file: {
       path: 2
       path: 0
       span: 27
-      span: 8
-      span: 85
+      span: 4
+      span: 81
       leading_comments: " Stream events\n"
     }
     location: {
@@ -1780,8 +1780,8 @@ file: {
       path: 0
       path: 1
       span: 27
-      span: 12
-      span: 18
+      span: 8
+      span: 14
     }
     location: {
       path: 6
@@ -1790,550 +1790,28 @@ file: {
       path: 0
       path: 2
       span: 27
-      span: 19
-      span: 40
-    }
-    location: {
-      path: 6
-      path: 0
-      path: 2
-      path: 0
-      path: 6
-      span: 27
-      span: 51
-      span: 57
-    }
-    location: {
-      path: 6
-      path: 0
-      path: 2
-      path: 0
-      path: 3
-      span: 27
-      span: 58
-      span: 83
-    }
-  }
-  syntax: "proto3"
-  buf_extension: {
-    is_import: false
-    is_syntax_unspecified: false
-  }
-}
-file: {
-  name: "proto/nerdbox/types/transfer/v1/datastream.proto"
-  package: "containerd.nerdbox.types.transfer.v1"
-  message_type: {
-    name: "ReadStream"
-    field: {
-      name: "stream"
-      number: 1
-      label: LABEL_OPTIONAL
-      type: TYPE_STRING
-      json_name: "stream"
-    }
-    field: {
-      name: "media_type"
-      number: 2
-      label: LABEL_OPTIONAL
-      type: TYPE_STRING
-      json_name: "mediaType"
-    }
-  }
-  message_type: {
-    name: "WriteStream"
-    field: {
-      name: "stream"
-      number: 1
-      label: LABEL_OPTIONAL
-      type: TYPE_STRING
-      json_name: "stream"
-    }
-    field: {
-      name: "media_type"
-      number: 2
-      label: LABEL_OPTIONAL
-      type: TYPE_STRING
-      json_name: "mediaType"
-    }
-  }
-  options: {
-    go_package: "github.com/containerd/nerdbox/api/types/transfer/v1;transfer"
-  }
-  source_code_info: {
-    location: {
-      span: 16
-      span: 0
+      span: 15
       span: 36
-      span: 1
     }
     location: {
-      path: 12
-      span: 16
-      span: 0
-      span: 18
-      leading_detached_comments: "\nCopyright The containerd Authors.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
-    }
-    location: {
-      path: 2
-      span: 18
-      span: 0
-      span: 45
-    }
-    location: {
-      path: 8
-      span: 20
-      span: 0
-      span: 83
-    }
-    location: {
-      path: 8
-      path: 11
-      span: 20
-      span: 0
-      span: 83
-    }
-    location: {
-      path: 4
-      path: 0
-      span: 25
-      span: 0
-      span: 28
-      span: 1
-      leading_comments: " ReadStream carries data from the client to the server (import\n direction). The client sends data through the stream and the\n server reads it.\n"
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 1
-      span: 25
-      span: 8
-      span: 18
-    }
-    location: {
-      path: 4
+      path: 6
       path: 0
       path: 2
       path: 0
-      span: 26
-      span: 8
-      span: 26
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 0
-      path: 5
-      span: 26
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 0
-      path: 1
-      span: 26
-      span: 15
-      span: 21
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 0
-      path: 3
-      span: 26
-      span: 24
-      span: 25
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
+      path: 6
       span: 27
-      span: 8
-      span: 30
+      span: 47
+      span: 53
     }
     location: {
-      path: 4
+      path: 6
       path: 0
       path: 2
-      path: 1
-      path: 5
-      span: 27
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
       path: 0
-      path: 2
-      path: 1
-      path: 1
-      span: 27
-      span: 15
-      span: 25
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
       path: 3
       span: 27
-      span: 28
-      span: 29
-    }
-    location: {
-      path: 4
-      path: 1
-      span: 33
-      span: 0
-      span: 36
-      span: 1
-      leading_comments: " WriteStream carries data from the server to the client (export\n direction). The server writes data into the stream and the\n client receives it.\n"
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 1
-      span: 33
-      span: 8
-      span: 19
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 0
-      span: 34
-      span: 8
-      span: 26
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 0
-      path: 5
-      span: 34
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 0
-      path: 1
-      span: 34
-      span: 15
-      span: 21
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 0
-      path: 3
-      span: 34
-      span: 24
-      span: 25
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 1
-      span: 35
-      span: 8
-      span: 30
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 1
-      path: 5
-      span: 35
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 1
-      path: 1
-      span: 35
-      span: 15
-      span: 25
-    }
-    location: {
-      path: 4
-      path: 1
-      path: 2
-      path: 1
-      path: 3
-      span: 35
-      span: 28
-      span: 29
-    }
-  }
-  syntax: "proto3"
-  buf_extension: {
-    is_import: false
-    is_syntax_unspecified: false
-  }
-}
-file: {
-  name: "proto/nerdbox/types/transfer/v1/filesystem.proto"
-  package: "containerd.nerdbox.types.transfer.v1"
-  message_type: {
-    name: "ContainerFilesystem"
-    field: {
-      name: "container_id"
-      number: 1
-      label: LABEL_OPTIONAL
-      type: TYPE_STRING
-      json_name: "containerId"
-    }
-    field: {
-      name: "path"
-      number: 2
-      label: LABEL_OPTIONAL
-      type: TYPE_STRING
-      json_name: "path"
-    }
-    field: {
-      name: "no_walk"
-      number: 3
-      label: LABEL_OPTIONAL
-      type: TYPE_BOOL
-      json_name: "noWalk"
-    }
-    field: {
-      name: "preserve_ownership"
-      number: 4
-      label: LABEL_OPTIONAL
-      type: TYPE_BOOL
-      json_name: "preserveOwnership"
-    }
-  }
-  options: {
-    go_package: "github.com/containerd/nerdbox/api/types/transfer/v1;transfer"
-  }
-  source_code_info: {
-    location: {
-      span: 16
-      span: 0
-      span: 38
-      span: 1
-    }
-    location: {
-      path: 12
-      span: 16
-      span: 0
-      span: 18
-      leading_detached_comments: "\nCopyright The containerd Authors.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
-    }
-    location: {
-      path: 2
-      span: 18
-      span: 0
-      span: 45
-    }
-    location: {
-      path: 8
-      span: 20
-      span: 0
-      span: 83
-    }
-    location: {
-      path: 8
-      path: 11
-      span: 20
-      span: 0
-      span: 83
-    }
-    location: {
-      path: 4
-      path: 0
-      span: 25
-      span: 0
-      span: 38
-      span: 1
-      leading_comments: " ContainerFilesystem represents a path within a running container's\n filesystem. It acts as either a source or destination in a transfer\n operation, identifying the container and path for archive operations.\n"
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 1
-      span: 25
-      span: 8
-      span: 27
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 0
-      span: 26
-      span: 8
-      span: 32
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 0
-      path: 5
-      span: 26
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 0
-      path: 1
-      span: 26
-      span: 15
-      span: 27
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 0
-      path: 3
-      span: 26
-      span: 30
-      span: 31
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
-      span: 27
-      span: 8
-      span: 24
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
-      path: 5
-      span: 27
-      span: 8
-      span: 14
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
-      path: 1
-      span: 27
-      span: 15
-      span: 19
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 1
-      path: 3
-      span: 27
-      span: 22
-      span: 23
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 2
-      span: 32
-      span: 8
-      span: 25
-      leading_comments: " When true and path is a directory, return only the directory entry\n itself without walking into its contents. This is useful for\n stat-like operations where only the directory's metadata is needed.\n"
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 2
-      path: 5
-      span: 32
-      span: 8
-      span: 12
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 2
-      path: 1
-      span: 32
-      span: 13
-      span: 20
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 2
-      path: 3
-      span: 32
-      span: 23
-      span: 24
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
-      span: 37
-      span: 8
-      span: 36
-      leading_comments: " When true, preserve the UID/GID from tar headers when extracting\n files. When false, extracted files are owned by the extracting\n process.\n"
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
-      path: 5
-      span: 37
-      span: 8
-      span: 12
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
-      path: 1
-      span: 37
-      span: 13
-      span: 31
-    }
-    location: {
-      path: 4
-      path: 0
-      path: 2
-      path: 3
-      path: 3
-      span: 37
-      span: 34
-      span: 35
+      span: 54
+      span: 79
     }
   }
   syntax: "proto3"
