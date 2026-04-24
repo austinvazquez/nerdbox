@@ -95,9 +95,22 @@ func NewTaskService(ctx context.Context, bundle string, publisher events.Publish
 	if err := s.initPlatform(); err != nil {
 		return nil, fmt.Errorf("failed to initialized platform behavior: %w", err)
 	}
-	go s.forward(ctx, publisher)
-	sd.RegisterCallback(func(context.Context) error {
+	forwardDone := make(chan struct{})
+	go func() {
+		defer close(forwardDone)
+		s.forward(ctx, publisher)
+	}()
+	sd.RegisterCallback(func(shutdownCtx context.Context) error {
+		// Close the events channel and wait for forward() to drain pending
+		// events before letting shutdown complete. Without this wait, the VM
+		// can power off before in-flight events are published to the host.
+		// Bound the wait by the shutdown context so a blocked publisher
+		// can't stall shutdown past the shutdown service's timeout.
 		close(s.events)
+		select {
+		case <-forwardDone:
+		case <-shutdownCtx.Done():
+		}
 		return nil
 	})
 
