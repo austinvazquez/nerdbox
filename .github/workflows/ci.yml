@@ -102,8 +102,6 @@ jobs:
           echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
           echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
 
-      - uses: actions/setup-node@v6
-      - run: npm install -g @bufbuild/buf
       - run: script/install-proto-tools
       - run: make proto-fmt
       - run: make check-protos check-api-descriptors
