@@ -34,6 +34,7 @@ import (
 	"github.com/containerd/log"
 	"github.com/containerd/ttrpc"
 
+	"github.com/containerd/nerdbox/internal/kvm"
 	"github.com/containerd/nerdbox/internal/vm"
 )
 
@@ -55,6 +56,11 @@ func NewManager() vm.Manager {
 type vmManager struct{}
 
 func (*vmManager) NewInstance(ctx context.Context, state string) (vm.Instance, error) {
+	// On Linux, libkrun panics if KVM is not available, so check it here.
+	if err := kvm.CheckKVM(); err != nil {
+		return nil, err
+	}
+
 	var (
 		p1         = filepath.SplitList(os.Getenv("PATH"))
 		p2         = filepath.SplitList(os.Getenv("LIBKRUN_PATH"))

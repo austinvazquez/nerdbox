@@ -43,7 +43,6 @@ import (
 	bundleAPI "github.com/containerd/nerdbox/api/services/bundle/v1"
 	mountAPI "github.com/containerd/nerdbox/api/services/mount/v1"
 	"github.com/containerd/nerdbox/api/services/vmevents/v1"
-	"github.com/containerd/nerdbox/internal/kvm"
 	"github.com/containerd/nerdbox/internal/nwcfg"
 	"github.com/containerd/nerdbox/internal/shim/sandbox"
 	"github.com/containerd/nerdbox/internal/shim/task/bundle"
@@ -173,11 +172,6 @@ func (s *service) Create(ctx context.Context, r *taskAPI.CreateTaskRequest) (_ *
 	}
 
 	presetup := time.Now()
-
-	// Libkrun panics if KVM is not available, so check it here.
-	if err := kvm.CheckKVM(); err != nil {
-		return nil, errgrpc.ToGRPC(err)
-	}
 
 	var (
 		nwpr        networksProvider
