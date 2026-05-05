@@ -34,7 +34,7 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 
 	"github.com/containerd/nerdbox/internal/transfer"
-	"github.com/containerd/nerdbox/internal/vm"
+	"github.com/containerd/nerdbox/pkg/vm"
 )
 
 func TestTransferEcho(t *testing.T) {

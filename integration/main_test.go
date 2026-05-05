@@ -23,7 +23,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/containerd/nerdbox/internal/vm"
+	"github.com/containerd/nerdbox/pkg/vm"
 	"github.com/containerd/nerdbox/internal/vm/libkrun"
 )
 

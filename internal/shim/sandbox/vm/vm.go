@@ -25,7 +25,7 @@ import (
 
 	"github.com/containerd/errdefs"
 	"github.com/containerd/nerdbox/internal/shim/sandbox"
-	"github.com/containerd/nerdbox/internal/vm"
+	"github.com/containerd/nerdbox/pkg/vm"
 	"github.com/containerd/ttrpc"
 )
 

@@ -35,7 +35,7 @@ import (
 	"github.com/containerd/ttrpc"
 
 	"github.com/containerd/nerdbox/internal/kvm"
-	"github.com/containerd/nerdbox/internal/vm"
+	"github.com/containerd/nerdbox/pkg/vm"
 )
 
 var vmStartTimeout = 15 * time.Second
