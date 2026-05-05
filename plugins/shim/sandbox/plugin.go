@@ -21,7 +21,7 @@ import (
 	"github.com/containerd/plugin/registry"
 
 	vmsbox "github.com/containerd/nerdbox/internal/shim/sandbox/vm"
-	"github.com/containerd/nerdbox/internal/vm"
+	"github.com/containerd/nerdbox/pkg/vm"
 	"github.com/containerd/nerdbox/plugins"
 )
 
@@ -33,8 +33,8 @@ func init() {
 			plugins.VMManagerPlugin,
 		},
 		InitFn: func(ic *plugin.InitContext) (interface{}, error) {
-			// Make this configurable or enforce a single plugin for the type
-			vmm, err := ic.GetByID(plugins.VMManagerPlugin, "libkrun")
+			// Only a single VM manager plugin is supported
+			vmm, err := ic.GetSingle(plugins.VMManagerPlugin)
 			if err != nil {
 				return nil, err
 			}

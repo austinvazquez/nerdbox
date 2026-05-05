@@ -25,7 +25,7 @@ import (
 
 	"github.com/containerd/errdefs"
 	"github.com/containerd/nerdbox/internal/shim/sandbox"
-	"github.com/containerd/nerdbox/internal/vm"
+	"github.com/containerd/nerdbox/pkg/vm"
 	"github.com/containerd/ttrpc"
 )
 
@@ -87,7 +87,11 @@ func (s *localsandbox) Start(ctx context.Context, opts ...sandbox.Opt) error {
 	}
 
 	for _, n := range o.NICs {
-		if err := vmi.AddNIC(ctx, n.Endpoint, n.MAC, vm.NetworkMode(n.Mode), n.Features, n.Flags); err != nil {
+		nicOpts := []vm.NetworkOpt{
+			vm.WithNICFeatures(n.Features),
+			vm.WithNICFlags(n.Flags),
+		}
+		if err := vmi.AddNIC(ctx, n.Endpoint, n.MAC, vm.NetworkMode(n.Mode), nicOpts...); err != nil {
 			return err
 		}
 	}

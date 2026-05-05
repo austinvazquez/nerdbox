@@ -35,7 +35,7 @@ import (
 	"github.com/containerd/ttrpc"
 
 	"github.com/containerd/nerdbox/internal/kvm"
-	"github.com/containerd/nerdbox/internal/vm"
+	"github.com/containerd/nerdbox/pkg/vm"
 )
 
 var vmStartTimeout = 15 * time.Second
@@ -196,11 +196,16 @@ func (v *vmInstance) AddDisk(ctx context.Context, blockID, mountPath string, opt
 	return nil
 }
 
-func (v *vmInstance) AddNIC(ctx context.Context, endpoint string, mac net.HardwareAddr, mode vm.NetworkMode, features, flags uint32) error {
+func (v *vmInstance) AddNIC(ctx context.Context, endpoint string, mac net.HardwareAddr, mode vm.NetworkMode, opts ...vm.NetworkOpt) error {
 	v.mu.Lock()
 	defer v.mu.Unlock()
 
-	if err := v.vmc.AddNIC(endpoint, mac, mode, features, flags); err != nil {
+	var no vm.NetworkOpts
+	for _, o := range opts {
+		o(&no)
+	}
+
+	if err := v.vmc.AddNIC(endpoint, mac, mode, no.Features, no.Flags); err != nil {
 		return fmt.Errorf("failed to add nic: %w", err)
 	}
 
@@ -373,7 +378,7 @@ func (v *vmInstance) Start(ctx context.Context, opts ...vm.StartOpt) (err error)
 	return nil
 }
 
-func (v *vmInstance) StartStream(ctx context.Context, streamID string) (net.Conn, error) {
+func (v *vmInstance) StartStream(ctx context.Context, streamID string, _ ...vm.StreamOpt) (net.Conn, error) {
 	const timeIncrement = 10 * time.Millisecond
 	for d := timeIncrement; d < time.Second; d += timeIncrement {
 		select {
