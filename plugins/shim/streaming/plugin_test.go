@@ -407,12 +407,12 @@ func TestSlowStreamDoesNotBlockOtherStreams(t *testing.T) {
 	}
 	streamapi.RegisterTTRPCStreamingService(server, &service{sb: sb})
 
-	// Stay under the AF_UNIX 104-byte sun_path limit on darwin:
-	// t.TempDir() on macOS lives under /var/folders/.../T/<TestName>/NNN/
-	// which alone exceeds 90 characters, so "<tmpdir>/ttrpc.sock"
-	// bind() with EINVAL there. Anchor the socket under /tmp instead
-	// (works on darwin and linux) and clean it up explicitly.
-	sockDir, err := os.MkdirTemp("/tmp", "nb-stream")
+	// Stay under the AF_UNIX 104-byte sun_path limit on macOS:
+	// t.TempDir() embeds the full test name, pushing the path over the
+	// limit. os.MkdirTemp("", ...) uses os.TempDir() which produces a
+	// short numeric-only subdirectory (~70 chars on macOS) and the correct
+	// system temp dir on Windows.
+	sockDir, err := os.MkdirTemp("", "nb-stream")
 	if err != nil {
 		t.Fatalf("mkdir tmp: %v", err)
 	}
