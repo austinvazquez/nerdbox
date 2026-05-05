@@ -112,6 +112,35 @@ type MountConfig struct {
 // MountOpt mutates a [MountConfig] value. Options are applied in order.
 type MountOpt func(*MountConfig)
 
+// NetworkOpts is the resolved configuration for a virtio-net interface
+// attached via [Instance.AddNIC]. It is normally constructed indirectly
+// by passing [NetworkOpt] values.
+//
+// New fields may be added in future releases; callers should construct
+// values via the [WithNICFeatures] / [WithNICFlags] helpers rather than
+// relying on positional initialization.
+type NetworkOpts struct {
+	// Features is a bitmask of implementation-specific virtio-net feature
+	// bits. Zero means "use the implementation default".
+	Features uint32
+
+	// Flags is a bitmask of implementation-specific virtio-net flags.
+	// Zero means "use the implementation default".
+	Flags uint32
+}
+
+// NetworkOpt mutates a [NetworkOpts] value. Options are applied in order.
+type NetworkOpt func(*NetworkOpts)
+
+// StreamOpts is the resolved configuration consumed by
+// [Instance.StartStream]. It currently has no fields but may grow over
+// time; callers should construct values via [StreamOpt] helpers as they
+// become available.
+type StreamOpts struct{}
+
+// StreamOpt mutates a [StreamOpts] value. Options are applied in order.
+type StreamOpt func(*StreamOpts)
+
 // Instance represents a single VM. Methods on Instance are safe for
 // concurrent use, but the lifecycle is strict:
 //
@@ -142,10 +171,11 @@ type Instance interface {
 	// AddNIC attaches a virtio-net interface to the guest. endpoint is
 	// the path to the host-side AF_UNIX socket that bridges packets to
 	// the network helper, mac is the link-layer address presented to the
-	// guest, mode selects the socket framing (see [NetworkMode]), and
-	// features and flags are libkrun-specific tuning bits. Must be called
+	// guest, and mode selects the socket framing (see [NetworkMode]).
+	// Implementation-specific tuning is supplied via [NetworkOpt]
+	// values; see [WithNICFeatures] and [WithNICFlags]. Must be called
 	// before [Instance.Start].
-	AddNIC(ctx context.Context, endpoint string, mac net.HardwareAddr, mode NetworkMode, features, flags uint32) error
+	AddNIC(ctx context.Context, endpoint string, mac net.HardwareAddr, mode NetworkMode, opts ...NetworkOpt) error
 
 	// Start boots the VM and waits for the guest agent (vminitd) to
 	// connect back over the TTRPC control channel. Configuration methods
@@ -177,9 +207,12 @@ type Instance interface {
 	// implementation-defined window before returning an error wrapping
 	// errdefs.ErrUnavailable.
 	//
+	// opts is reserved for future per-stream configuration; no options
+	// are currently defined.
+	//
 	// TODO: Consider making this interface optional, a per RPC implementation
 	// is possible but likely less efficient.
-	StartStream(ctx context.Context, streamID string) (net.Conn, error)
+	StartStream(ctx context.Context, streamID string, opts ...StreamOpt) (net.Conn, error)
 }
 
 // WithReadOnly sets [MountConfig.Readonly] so the filesystem or disk is
@@ -195,5 +228,21 @@ func WithReadOnly() MountOpt {
 func WithVmdk() MountOpt {
 	return func(o *MountConfig) {
 		o.Vmdk = true
+	}
+}
+
+// WithNICFeatures sets [NetworkOpts.Features] for [Instance.AddNIC]. The
+// meaning of individual bits is implementation-defined.
+func WithNICFeatures(features uint32) NetworkOpt {
+	return func(o *NetworkOpts) {
+		o.Features = features
+	}
+}
+
+// WithNICFlags sets [NetworkOpts.Flags] for [Instance.AddNIC]. The meaning
+// of individual bits is implementation-defined.
+func WithNICFlags(flags uint32) NetworkOpt {
+	return func(o *NetworkOpts) {
+		o.Flags = flags
 	}
 }

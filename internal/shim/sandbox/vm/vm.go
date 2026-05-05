@@ -87,7 +87,11 @@ func (s *localsandbox) Start(ctx context.Context, opts ...sandbox.Opt) error {
 	}
 
 	for _, n := range o.NICs {
-		if err := vmi.AddNIC(ctx, n.Endpoint, n.MAC, vm.NetworkMode(n.Mode), n.Features, n.Flags); err != nil {
+		nicOpts := []vm.NetworkOpt{
+			vm.WithNICFeatures(n.Features),
+			vm.WithNICFlags(n.Flags),
+		}
+		if err := vmi.AddNIC(ctx, n.Endpoint, n.MAC, vm.NetworkMode(n.Mode), nicOpts...); err != nil {
 			return err
 		}
 	}
