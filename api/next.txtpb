@@ -365,6 +365,12 @@ file: {
   message_type: {
     name: "UnmountResponse"
   }
+  message_type: {
+    name: "UnmountAllRequest"
+  }
+  message_type: {
+    name: "UnmountAllResponse"
+  }
   service: {
     name: "Mount"
     method: {
@@ -377,6 +383,11 @@ file: {
       input_type: ".containerd.vminitd.services.mount.v1.UnmountRequest"
       output_type: ".containerd.vminitd.services.mount.v1.UnmountResponse"
     }
+    method: {
+      name: "UnmountAll"
+      input_type: ".containerd.vminitd.services.mount.v1.UnmountAllRequest"
+      output_type: ".containerd.vminitd.services.mount.v1.UnmountAllResponse"
+    }
   }
   options: {
     go_package: "github.com/containerd/nerdbox/api/services/mount/v1;mount"
@@ -385,8 +396,8 @@ file: {
     location: {
       span: 16
       span: 0
-      span: 44
-      span: 26
+      span: 49
+      span: 29
     }
     location: {
       path: 12
@@ -419,7 +430,7 @@ file: {
       path: 0
       span: 22
       span: 0
-      span: 25
+      span: 26
       span: 1
     }
     location: {
@@ -509,18 +520,57 @@ file: {
       span: 56
     }
     location: {
+      path: 6
+      path: 0
+      path: 2
+      path: 2
+      span: 25
+      span: 4
+      span: 67
+    }
+    location: {
+      path: 6
+      path: 0
+      path: 2
+      path: 2
+      path: 1
+      span: 25
+      span: 8
+      span: 18
+    }
+    location: {
+      path: 6
+      path: 0
+      path: 2
+      path: 2
+      path: 2
+      span: 25
+      span: 19
+      span: 36
+    }
+    location: {
+      path: 6
+      path: 0
+      path: 2
+      path: 2
+      path: 3
+      span: 25
+      span: 47
+      span: 65
+    }
+    location: {
       path: 4
       path: 0
-      span: 27
+      span: 28
       span: 0
-      span: 32
+      span: 33
       span: 1
     }
     location: {
       path: 4
       path: 0
       path: 1
-      span: 27
+      span: 28
       span: 8
       span: 17
     }
@@ -530,7 +580,7 @@ file: {
       path: 2
       path: 0
       path: 5
-      span: 28
+      span: 29
       span: 4
       span: 10
     }
@@ -539,7 +589,7 @@ file: {
       path: 0
       path: 2
       path: 0
-      span: 28
+      span: 29
       span: 4
       span: 32
     }
@@ -549,7 +599,7 @@ file: {
       path: 2
       path: 0
       path: 1
-      span: 28
+      span: 29
       span: 11
       span: 15
     }
@@ -559,7 +609,7 @@ file: {
       path: 2
       path: 0
       path: 3
-      span: 28
+      span: 29
       span: 30
       span: 31
     }
@@ -569,7 +619,7 @@ file: {
       path: 2
       path: 1
       path: 5
-      span: 29
+      span: 30
       span: 4
       span: 10
     }
@@ -578,7 +628,7 @@ file: {
       path: 0
       path: 2
       path: 1
-      span: 29
+      span: 30
       span: 4
       span: 32
       trailing_comments: " in-VM path or virtiofs tag"
@@ -589,7 +639,7 @@ file: {
       path: 2
       path: 1
       path: 1
-      span: 29
+      span: 30
       span: 11
       span: 17
     }
@@ -599,7 +649,7 @@ file: {
       path: 2
       path: 1
       path: 3
-      span: 29
+      span: 30
       span: 30
       span: 31
     }
@@ -609,7 +659,7 @@ file: {
       path: 2
       path: 2
       path: 5
-      span: 30
+      span: 31
       span: 4
       span: 10
     }
@@ -618,7 +668,7 @@ file: {
       path: 0
       path: 2
       path: 2
-      span: 30
+      span: 31
       span: 4
       span: 32
       trailing_comments: " in-VM path"
@@ -629,7 +679,7 @@ file: {
       path: 2
       path: 2
       path: 1
-      span: 30
+      span: 31
       span: 11
       span: 17
     }
@@ -639,7 +689,7 @@ file: {
       path: 2
       path: 2
       path: 3
-      span: 30
+      span: 31
       span: 30
       span: 31
     }
@@ -649,7 +699,7 @@ file: {
       path: 2
       path: 3
       path: 4
-      span: 31
+      span: 32
       span: 4
       span: 12
     }
@@ -658,7 +708,7 @@ file: {
       path: 0
       path: 2
       path: 3
-      span: 31
+      span: 32
       span: 4
       span: 32
     }
@@ -668,7 +718,7 @@ file: {
       path: 2
       path: 3
       path: 5
-      span: 31
+      span: 32
       span: 13
       span: 19
     }
@@ -678,7 +728,7 @@ file: {
       path: 2
       path: 3
       path: 1
-      span: 31
+      span: 32
       span: 20
       span: 27
     }
@@ -688,23 +738,23 @@ file: {
       path: 2
       path: 3
       path: 3
-      span: 31
+      span: 32
       span: 30
       span: 31
     }
     location: {
       path: 4
       path: 1
-      span: 34
+      span: 35
       span: 0
-      span: 36
+      span: 37
       span: 1
     }
     location: {
       path: 4
       path: 1
       path: 1
-      span: 34
+      span: 35
       span: 8
       span: 23
     }
@@ -714,7 +764,7 @@ file: {
       path: 2
       path: 0
       path: 4
-      span: 35
+      span: 36
       span: 4
       span: 12
     }
@@ -723,7 +773,7 @@ file: {
       path: 1
       path: 2
       path: 0
-      span: 35
+      span: 36
       span: 4
       span: 34
     }
@@ -733,7 +783,7 @@ file: {
       path: 2
       path: 0
       path: 6
-      span: 35
+      span: 36
       span: 13
       span: 22
     }
@@ -743,7 +793,7 @@ file: {
       path: 2
       path: 0
       path: 1
-      span: 35
+      span: 36
       span: 23
       span: 29
     }
@@ -753,14 +803,14 @@ file: {
       path: 2
       path: 0
       path: 3
-      span: 35
+      span: 36
       span: 32
       span: 33
     }
     location: {
       path: 4
       path: 2
-      span: 38
+      span: 39
       span: 0
       span: 27
     }
@@ -768,23 +818,23 @@ file: {
       path: 4
       path: 2
       path: 1
-      span: 38
+      span: 39
       span: 8
       span: 24
     }
     location: {
       path: 4
       path: 3
-      span: 40
+      span: 41
       span: 0
-      span: 42
+      span: 43
       span: 1
     }
     location: {
       path: 4
       path: 3
       path: 1
-      span: 40
+      span: 41
       span: 8
       span: 22
     }
@@ -794,7 +844,7 @@ file: {
       path: 2
       path: 0
       path: 5
-      span: 41
+      span: 42
       span: 4
       span: 10
     }
@@ -803,7 +853,7 @@ file: {
       path: 3
       path: 2
       path: 0
-      span: 41
+      span: 42
       span: 4
       span: 22
       trailing_comments: " in-VM path"
@@ -814,7 +864,7 @@ file: {
       path: 2
       path: 0
       path: 1
-      span: 41
+      span: 42
       span: 11
       span: 17
     }
@@ -824,14 +874,14 @@ file: {
       path: 2
       path: 0
       path: 3
-      span: 41
+      span: 42
       span: 20
       span: 21
     }
     location: {
       path: 4
       path: 4
-      span: 44
+      span: 45
       span: 0
       span: 26
     }
@@ -839,9 +889,39 @@ file: {
       path: 4
       path: 4
       path: 1
-      span: 44
+      span: 45
       span: 8
       span: 23
+    }
+    location: {
+      path: 4
+      path: 5
+      span: 47
+      span: 0
+      span: 28
+    }
+    location: {
+      path: 4
+      path: 5
+      path: 1
+      span: 47
+      span: 8
+      span: 25
+    }
+    location: {
+      path: 4
+      path: 6
+      span: 49
+      span: 0
+      span: 29
+    }
+    location: {
+      path: 4
+      path: 6
+      path: 1
+      span: 49
+      span: 8
+      span: 26
     }
   }
   syntax: "proto3"

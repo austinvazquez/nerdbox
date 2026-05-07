@@ -23,6 +23,7 @@ option go_package = "github.com/containerd/nerdbox/api/services/mount/v1;mount";
 service Mount {
 	rpc MountAll(MountAllRequest) returns (MountAllResponse);
 	rpc Unmount(UnmountRequest) returns (UnmountResponse);
+	rpc UnmountAll(UnmountAllRequest) returns (UnmountAllResponse);
 }
 
 message MountSpec {
@@ -43,3 +44,7 @@ message UnmountRequest {
 }
 
 message UnmountResponse {}
+
+message UnmountAllRequest {}
+
+message UnmountAllResponse {}

@@ -10,6 +10,7 @@ import (
 type TTRPCMountService interface {
 	MountAll(context.Context, *MountAllRequest) (*MountAllResponse, error)
 	Unmount(context.Context, *UnmountRequest) (*UnmountResponse, error)
+	UnmountAll(context.Context, *UnmountAllRequest) (*UnmountAllResponse, error)
 }
 
 func RegisterTTRPCMountService(srv *ttrpc.Server, svc TTRPCMountService) {
@@ -28,6 +29,13 @@ func RegisterTTRPCMountService(srv *ttrpc.Server, svc TTRPCMountService) {
 					return nil, err
 				}
 				return svc.Unmount(ctx, &req)
+			},
+			"UnmountAll": func(ctx context.Context, unmarshal func(interface{}) error) (interface{}, error) {
+				var req UnmountAllRequest
+				if err := unmarshal(&req); err != nil {
+					return nil, err
+				}
+				return svc.UnmountAll(ctx, &req)
 			},
 		},
 	})
@@ -54,6 +62,14 @@ func (c *ttrpcmountClient) MountAll(ctx context.Context, req *MountAllRequest) (
 func (c *ttrpcmountClient) Unmount(ctx context.Context, req *UnmountRequest) (*UnmountResponse, error) {
 	var resp UnmountResponse
 	if err := c.client.Call(ctx, "containerd.vminitd.services.mount.v1.Mount", "Unmount", req, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *ttrpcmountClient) UnmountAll(ctx context.Context, req *UnmountAllRequest) (*UnmountAllResponse, error) {
+	var resp UnmountAllResponse
+	if err := c.client.Call(ctx, "containerd.vminitd.services.mount.v1.Mount", "UnmountAll", req, &resp); err != nil {
 		return nil, err
 	}
 	return &resp, nil

@@ -145,6 +145,20 @@ func (s *service) shutdown(ctx context.Context) error {
 	}
 
 	if s.sb != nil {
+		// Unmount all block volumes inside the guest before stopping the VM,
+		// to flush ext4 journals and dirty pages to the virtio-blk devices.
+		// Best-effort with a short retry for transient EBUSY.
+		if vmc, err := s.sb.Client(); err != nil {
+			log.G(ctx).WithError(err).Warn("failed to get VM client; skipping unmount of block volumes before VM shutdown")
+		} else {
+			unmountCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+			err := unmountAllWithRetry(unmountCtx, mountAPI.NewTTRPCMountClient(vmc))
+			cancel()
+			if err != nil {
+				log.G(ctx).WithError(err).Warn("failed to unmount all block volumes before VM shutdown")
+			}
+		}
+
 		if err := s.sb.Stop(ctx); err != nil {
 			errs = append(errs, fmt.Errorf("sandbox shutdown: %w", err))
 		}
@@ -154,6 +168,23 @@ func (s *service) shutdown(ctx context.Context) error {
 	s.events <- nil
 
 	return errors.Join(errs...)
+}
+
+// unmountAllWithRetry asks the guest to unmount all tracked mounts, retrying
+// briefly on transient failures. Returns the last UnmountAll error if ctx is
+// cancelled before a successful call.
+func unmountAllWithRetry(ctx context.Context, mc mountAPI.TTRPCMountService) error {
+	for {
+		_, err := mc.UnmountAll(ctx, &mountAPI.UnmountAllRequest{})
+		if err == nil {
+			return nil
+		}
+		select {
+		case <-ctx.Done():
+			return err
+		case <-time.After(100 * time.Millisecond):
+		}
+	}
 }
 
 // Create a new initial process and container with the underlying OCI runtime
@@ -443,6 +474,7 @@ func (s *service) Delete(ctx context.Context, r *taskAPI.DeleteRequest) (*taskAP
 	if err != nil {
 		return nil, errgrpc.ToGRPC(err)
 	}
+
 	tc := taskAPI.NewTTRPCTaskClient(vmc)
 	resp, err := tc.Delete(ctx, r)
 	if err == nil {
