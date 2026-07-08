@@ -88,7 +88,7 @@ func TestCopyStdinUntilCloseDrainsOnCloseIO(t *testing.T) {
 	const want = "AAAABBBBCCCC"
 
 	gate := make(chan struct{})
-	closeCh := make(chan struct{})
+	closeCh := make(chan context.Context, 1)
 	sc := &recordingStreamConn{}
 	// Buffer larger than a single chunk so each Read returns exactly one
 	// chunk (mirroring one FIFO read per iteration).
@@ -103,9 +103,10 @@ func TestCopyStdinUntilCloseDrainsOnCloseIO(t *testing.T) {
 
 	// Wait until the first read has begun and parked on gate. From here the
 	// read channel cannot become ready until we close gate, so firing CloseIO
-	// now forces the select down the closeCh branch deterministically.
+	// now forces the select down the closeCh branch deterministically. The
+	// CloseIO context is never cancelled, so the drain runs through to EOF.
 	<-r.started
-	close(closeCh)
+	closeCh <- context.Background()
 
 	// Release the reader so the closeCh branch can drain every remaining chunk.
 	close(gate)
@@ -122,6 +123,90 @@ func TestCopyStdinUntilCloseDrainsOnCloseIO(t *testing.T) {
 	}
 	if !sc.closeWriteCalled {
 		t.Fatal("CloseWrite was not called")
+	}
+	if sc.bytesAfterClose != 0 {
+		t.Fatalf("%d bytes written after CloseWrite; EOF was signalled before draining",
+			sc.bytesAfterClose)
+	}
+}
+
+// stallingReader delivers its chunks one per Read and then blocks forever,
+// modelling a FIFO whose write end is never closed (so a read can never see
+// EOF). blocking is closed when the reader parks; release lets the parked read
+// finally return so the test leaks no goroutine.
+type stallingReader struct {
+	chunks   [][]byte
+	idx      int
+	blocking chan struct{}
+	release  <-chan struct{}
+}
+
+func (r *stallingReader) Read(p []byte) (int, error) {
+	if r.idx >= len(r.chunks) {
+		// No buffered data left and the writer never closed: block like a
+		// real FIFO read waiting on data or an EOF that never arrives.
+		close(r.blocking)
+		<-r.release
+		return 0, io.EOF
+	}
+	n := copy(p, r.chunks[r.idx])
+	r.idx++
+	return n, nil
+}
+
+// TestCopyStdinUntilCloseAbortsDrainOnContextCancel is a regression test for
+// the stdin drain wedging when CloseIO is issued but the FIFO write end is
+// never closed. Because the drain is bound to the CloseIO request context,
+// cancelling that context (the caller giving up) must forward all buffered
+// data, then unblock the drain and still deliver the in-band EOF.
+func TestCopyStdinUntilCloseAbortsDrainOnContextCancel(t *testing.T) {
+	chunks := [][]byte{
+		[]byte("AAAA"),
+		[]byte("BBBB"),
+	}
+	const want = "AAAABBBB"
+
+	closeCh := make(chan context.Context, 1)
+	release := make(chan struct{})
+	sc := &recordingStreamConn{}
+	buf := make([]byte, 8)
+	r := &stallingReader{chunks: chunks, blocking: make(chan struct{}), release: release}
+
+	// cctx models the CloseIO request context; cancelling it stands in for the
+	// caller cancelling or hitting its deadline.
+	cctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	done := make(chan struct{})
+	go func() {
+		copyStdinUntilClose(context.Background(), sc, r, buf, closeCh)
+		close(done)
+	}()
+
+	// CloseIO fires, but the writer is never closed: the drain forwards the
+	// buffered chunks and then parks on a read that can never complete.
+	closeCh <- cctx
+
+	// Once the drain is parked on the never-completing read, cancelling the
+	// CloseIO context must unblock it deterministically (no timing dependence).
+	<-r.blocking
+	cancel()
+
+	select {
+	case <-done:
+	case <-t.Context().Done():
+		t.Fatal("copyStdinUntilClose did not return after context cancel")
+	}
+
+	// Let the abandoned background read return so no goroutine is leaked.
+	close(release)
+
+	if got := sc.buf.String(); got != want {
+		t.Fatalf("stdin data lost before cancel abort: got %q (%d bytes), want %q (%d bytes)",
+			got, len(got), want, len(want))
+	}
+	if !sc.closeWriteCalled {
+		t.Fatal("CloseWrite was not called on context cancel")
 	}
 	if sc.bytesAfterClose != 0 {
 		t.Fatalf("%d bytes written after CloseWrite; EOF was signalled before draining",

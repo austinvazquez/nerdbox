@@ -41,10 +41,12 @@ type stdinStreamWriteCloser interface {
 	CloseWrite() error
 }
 
-// copyStreams returns a stdinEOF function that, when called (by CloseIO),
-// signals the stdin goroutine to stop reading the FIFO and send the
-// OP_SHUTDOWN(SEND) in-band EOF to the guest. It is nil when stdin is empty.
-func copyStreams(ctx context.Context, streams [3]io.ReadWriteCloser, stdin, stdout, stderr string, done chan struct{}) (stdinEOF func() error, err error) {
+// copyStreams returns a stdinEOF function that, when called (by CloseIO with
+// the CloseIO request context), drains the stdin FIFO and sends the
+// OP_SHUTDOWN(SEND) in-band EOF to the guest. It blocks until the EOF has been
+// delivered or the passed context is cancelled, binding the drain to the
+// CloseIO RPC. It is nil when stdin is empty.
+func copyStreams(ctx context.Context, streams [3]io.ReadWriteCloser, stdin, stdout, stderr string, done chan struct{}) (stdinEOF func(context.Context) error, err error) {
 	var cwg sync.WaitGroup
 	var copying atomic.Int32
 	copying.Store(2)
@@ -143,8 +145,11 @@ func copyStreams(ctx context.Context, streams [3]io.ReadWriteCloser, stdin, stdo
 		if err != nil {
 			return nil, fmt.Errorf("containerd-shim: opening %s failed: %s", stdin, err)
 		}
-		// closeCh is closed by the stdinEOF function (triggered by CloseIO).
-		closeCh := make(chan struct{})
+		// closeCh delivers the CloseIO request context to the copy goroutine;
+		// drainDone is closed once the goroutine has sent the in-band EOF and
+		// returned.
+		closeCh := make(chan context.Context, 1)
+		drainDone := make(chan struct{})
 		cwg.Add(1)
 		go func() {
 			cwg.Done()
@@ -155,13 +160,9 @@ func copyStreams(ctx context.Context, streams [3]io.ReadWriteCloser, stdin, stdo
 			// so the transport outlives the in-band EOF and the host can
 			// close its end cleanly after the guest drains.
 			f.Close()
+			close(drainDone)
 		}()
-		stdinEOF = func() error {
-			// Signal the goroutine to stop reading the FIFO and send
-			// OP_SHUTDOWN(SEND) in-order on the stdin stream.
-			close(closeCh)
-			return nil
-		}
+		stdinEOF = stdinEOFFunc(closeCh, drainDone)
 	}
 	cwg.Wait()
 	return stdinEOF, nil
