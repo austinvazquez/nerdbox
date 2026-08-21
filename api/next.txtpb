@@ -1,4 +1,173 @@
 file: {
+  name: "proto/nerdbox/runtime/options/v1/options.proto"
+  package: "containerd.nerdbox.runtime.options.v1"
+  dependency: "google/protobuf/duration.proto"
+  message_type: {
+    name: "Options"
+    field: {
+      name: "disable_watchdog"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_BOOL
+      json_name: "disableWatchdog"
+    }
+    field: {
+      name: "watchdog_timeout"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_MESSAGE
+      type_name: ".google.protobuf.Duration"
+      json_name: "watchdogTimeout"
+    }
+  }
+  options: {
+    go_package: "github.com/containerd/nerdbox/api/runtime/options/v1;options"
+  }
+  source_code_info: {
+    location: {
+      span: 16
+      span: 0
+      span: 40
+      span: 1
+    }
+    location: {
+      path: 12
+      span: 16
+      span: 0
+      span: 18
+      leading_detached_comments: "\nCopyright The containerd Authors.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n"
+    }
+    location: {
+      path: 2
+      span: 18
+      span: 0
+      span: 46
+    }
+    location: {
+      path: 3
+      path: 0
+      span: 20
+      span: 0
+      span: 40
+    }
+    location: {
+      path: 8
+      span: 22
+      span: 0
+      span: 83
+    }
+    location: {
+      path: 8
+      path: 11
+      span: 22
+      span: 0
+      span: 83
+    }
+    location: {
+      path: 4
+      path: 0
+      span: 28
+      span: 0
+      span: 40
+      span: 1
+      leading_comments: " Options carries per-sandbox runtime configuration for the nerdbox shim,\n set via the container/sandbox's runtime options (containerd's\n WithRuntime) and threaded down to the shim manager's Start through\n BootstrapParams.Extensions (see pkg/shim/manager and pkg/shim/watchdog).\n"
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 1
+      span: 28
+      span: 8
+      span: 15
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 0
+      path: 5
+      span: 32
+      span: 4
+      span: 8
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 0
+      span: 32
+      span: 4
+      span: 30
+      leading_comments: " disable_watchdog turns off the Windows shutdown watchdog\n (pkg/shim/watchdog) for this sandbox's shim. Unset (false) leaves it\n enabled, which is the default.\n"
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 0
+      path: 1
+      span: 32
+      span: 9
+      span: 25
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 0
+      path: 3
+      span: 32
+      span: 28
+      span: 29
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      path: 6
+      span: 39
+      span: 4
+      span: 28
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      span: 39
+      span: 4
+      span: 50
+      leading_comments: " watchdog_timeout overrides watchdog.Timeout for this sandbox's shim:\n how long the watchdog waits, once armed by manager.Stop, before\n concluding the process is unrecoverably wedged and terminating it.\n Unset (zero) keeps the package default. Ignored if disable_watchdog\n is true.\n"
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      path: 1
+      span: 39
+      span: 29
+      span: 45
+    }
+    location: {
+      path: 4
+      path: 0
+      path: 2
+      path: 1
+      path: 3
+      span: 39
+      span: 48
+      span: 49
+    }
+  }
+  syntax: "proto3"
+  buf_extension: {
+    is_import: false
+    is_syntax_unspecified: false
+  }
+}
+file: {
   name: "proto/nerdbox/services/bundle/v1/bundle.proto"
   package: "containerd.vminitd.services.bundle.v1"
   message_type: {

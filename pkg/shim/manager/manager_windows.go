@@ -38,7 +38,57 @@ import (
 	"github.com/containerd/containerd/v2/pkg/shim"
 	"github.com/containerd/log"
 	"golang.org/x/sys/windows"
+
+	options "github.com/containerd/nerdbox/api/runtime/options/v1"
+	"github.com/containerd/nerdbox/pkg/shim/watchdog"
 )
+
+// stopWaitDefault bounds how long Stop waits for the shim process to fully
+// exit after TerminateProcess, replacing an unconditional windows.INFINITE
+// wait.
+//
+// This is deliberately NOT derived from watchdog.Timeout. Stop runs inside
+// a fresh re-exec of this binary with "-action delete" — a different OS
+// process from the long-running shim server manager.Start spawned earlier
+// — so it never sees the env vars Start forwarded to that other process,
+// including any per-sandbox watchdog.EnvTimeout override (see
+// api/runtime/options/v1); there is no channel for that value to reach
+// here. Tying this wait to watchdog.Timeout's own default (30s) would also
+// just recreate the problem below with a bigger number.
+//
+// The real constraint this needs to fit inside is containerd's own
+// cleanupAfterDeadShim (core/runtime/v2/shim.go), which invokes this
+// binary via exec.CommandContext under io.containerd.timeout.shim.cleanup
+// — 5s by default — and kills the whole process outright when that
+// expires, with no chance for anything in it to log or return an error. A
+// plain context.Context cannot cross that process boundary, so ctx here
+// never carries that deadline (the ctx.Deadline() clamp below is a no-op
+// for this caller; it is kept only for some other caller that does pass a
+// bounded ctx directly). stopWaitDefault is sized to fit under that common
+// 5s budget, with a safety margin, so this call's own diagnostic log line
+// and returned error get a real chance to run instead of racing — and
+// losing to — that outer kill.
+//
+// Known limitation: if a sandbox's WatchdogTimeout override is set higher
+// than this, Stop can time out and report an error to containerd well
+// before that shim's own watchdog fires — Stop has no way to learn the
+// override, so it cannot wait that long itself. The shim's own self-exit
+// still happens independently, on its own schedule, regardless of what
+// Stop reports back.
+const stopWaitDefault = 3 * time.Second
+
+// stopWaitSafetyMargin is subtracted from ctx's remaining deadline, for a
+// caller that does pass one, so this call's own diagnostic logging/error
+// has a chance to finish before that deadline's own enforcement (if any)
+// kills this process outright.
+const stopWaitSafetyMargin = 500 * time.Millisecond
+
+// maxStopWait caps the wait passed to WaitForSingleObject regardless of
+// ctx: waitTimeout.Milliseconds() is truncated into a uint32, and
+// windows.INFINITE is itself 0xFFFFFFFF, so an unbounded or sufficiently
+// large value could wrap into an accidental infinite wait — exactly the
+// hang this exists to remove. No legitimate deadline needs to exceed this.
+const maxStopWait = 24 * time.Hour
 
 func newCommand(ctx context.Context, id, containerdAddress, containerdTTRPCAddress string, debug bool) (*exec.Cmd, error) {
 	ns, err := namespaces.NamespaceRequired(ctx)
@@ -120,6 +170,17 @@ func (manager) Start(ctx context.Context, bparams *bootapi.BootstrapParams) (_ *
 	// Pass the pipe address to the child shim process via environment variable.
 	// The shim's serveListener reads TTRPC_SOCKET to know where to listen.
 	cmd.Env = append(cmd.Env, "TTRPC_SOCKET="+address)
+
+	if opts, err := watchdogOptions(bparams); err != nil {
+		log.G(ctx).WithError(err).Warn("failed to read watchdog runtime options; using defaults")
+	} else if opts != nil {
+		switch {
+		case opts.GetDisableWatchdog():
+			cmd.Env = append(cmd.Env, watchdog.EnvDisable+"=1")
+		case opts.GetWatchdogTimeout().AsDuration() > 0:
+			cmd.Env = append(cmd.Env, watchdog.EnvTimeout+"="+opts.GetWatchdogTimeout().AsDuration().String())
+		}
+	}
 
 	if err := cmd.Start(); err != nil {
 		return nil, err
@@ -254,6 +315,22 @@ func waitForShimPipe(ctx context.Context, address string, shimExit <-chan error,
 	}
 }
 
+// watchdogOptions extracts *options.Options from bparams.Extensions, set by
+// containerd from the sandbox/container's configured runtime options (see
+// api/runtime/options/v1). Returns (nil, nil) if the caller never set one —
+// an absent extension is the common case, not an error.
+func watchdogOptions(bparams *bootapi.BootstrapParams) (*options.Options, error) {
+	var opts options.Options
+	found, err := bparams.FindExtension(&opts)
+	if err != nil {
+		return nil, err
+	}
+	if !found {
+		return nil, nil
+	}
+	return &opts, nil
+}
+
 // bundlePath extracts the bundle path from the context. The shim framework
 // stores it as shim.Opts{BundlePath: ...} via the -bundle flag.
 func bundlePath(ctx context.Context) string {
@@ -270,16 +347,31 @@ func bundlePath(ctx context.Context) string {
 // (nerdbox uses VM-based virtio block devices instead). Removing the
 // directory makes UnmountAll a no-op.
 func removeRootfs(ctx context.Context) {
-	if bp := bundlePath(ctx); bp != "" {
-		os.RemoveAll(filepath.Join(bp, "rootfs"))
+	bp := bundlePath(ctx)
+	if bp == "" {
+		return
+	}
+	if err := os.RemoveAll(filepath.Join(bp, "rootfs")); err != nil {
+		log.G(ctx).WithError(err).WithField("component", "shim-manager").Warn("failed to remove bundle rootfs")
 	}
 }
 
 func (manager) Stop(ctx context.Context, id string) (shim.StopStatus, error) {
-	// must run on all exits (including when the process is already gone)
-	// to ensure containerd's bundle cleanup is successful. See [removeRootfs]
-	// for more details.
-	defer removeRootfs(ctx)
+	// Must run once we're confident the shim is actually gone, to ensure
+	// containerd's bundle cleanup is successful — see [removeRootfs]. Not
+	// unconditional: on the timeout/wait-failure paths below, the process
+	// may still be alive and holding open handles under the bundle, so
+	// running removal concurrently with it would race file deletion
+	// against a process that's still using those files. confirmedGone
+	// defaults to true because every *other* return path in this function
+	// (pid file already gone, OpenProcess says the pid is stale, or the
+	// wait below actually observes the exit) has already confirmed that.
+	confirmedGone := true
+	defer func() {
+		if confirmedGone {
+			removeRootfs(ctx)
+		}
+	}()
 
 	p, err := os.ReadFile(filepath.Join(bundlePath(ctx), "shim.pid"))
 	if err != nil {
@@ -319,6 +411,20 @@ func (manager) Stop(ctx context.Context, id string) (shim.StopStatus, error) {
 	}
 	defer windows.CloseHandle(h)
 
+	// Best-effort: tell pid's watchdog.Listen goroutine (if any) that it is
+	// about to be killed, so it can capture a goroutine dump and, if
+	// TerminateProcess/the OS's own teardown doesn't finish it off first,
+	// self-terminate. A no-op if the shim never called Listen. See
+	// [watchdog] for why this exists — a thread wedged deep in a
+	// hypervisor call can leave this same class of hang with no way to
+	// diagnose it from the outside, since TerminateProcess never runs any
+	// code in the target process. Arm's own error (as opposed to "no such
+	// event", which is the expected case whenever pid never called Listen)
+	// is worth logging, but not worth failing Stop over.
+	if err := watchdog.Arm(pid); err != nil {
+		log.G(ctx).WithError(err).WithField("pid", pid).Warn("failed to arm shim watchdog")
+	}
+
 	// Terminate the shim. ERROR_ACCESS_DENIED is returned when the process
 	// has already exited but the handle is still open; WaitForSingleObject
 	// below will return immediately in that case.
@@ -326,11 +432,37 @@ func (manager) Stop(ctx context.Context, id string) (shim.StopStatus, error) {
 		return shim.StopStatus{}, fmt.Errorf("terminate shim process: %w", err)
 	}
 
-	// Block until the process has fully exited. There is no timeout: the
-	// shim is the only target and TerminateProcess is unconditional, so
-	// WaitForSingleObject will always complete.
-	if _, err := windows.WaitForSingleObject(h, windows.INFINITE); err != nil {
+	// Block until the process has fully exited, bounded rather than
+	// INFINITE: TerminateProcess is unconditional, but a thread executing
+	// in kernel/hypervisor code at the moment of termination can make the
+	// OS's own teardown of that thread — and therefore this wait — take far
+	// longer than expected. Time out and report it rather than hang the
+	// caller forever; the process is still marked for termination
+	// regardless, so a timeout here does not leave it running (though we
+	// can no longer be sure it has actually exited — see confirmedGone
+	// above).
+	//
+	// See stopWaitDefault's doc for why this is a small fixed value rather
+	// than derived from watchdog.Timeout, and for the ctx.Deadline() clamp
+	// below being a no-op for Stop's usual caller.
+	waitTimeout := min(stopWaitDefault, maxStopWait)
+	if dl, ok := ctx.Deadline(); ok {
+		if remaining := time.Until(dl) - stopWaitSafetyMargin; remaining < waitTimeout {
+			waitTimeout = max(remaining, 0)
+		}
+	}
+	if status, err := windows.WaitForSingleObject(h, uint32(waitTimeout.Milliseconds())); err != nil {
+		confirmedGone = false
 		return shim.StopStatus{}, fmt.Errorf("wait for shim process: %w", err)
+	} else if status == uint32(windows.WAIT_TIMEOUT) {
+		confirmedGone = false
+		log.G(ctx).WithFields(log.Fields{
+			"component":   "shim-manager",
+			"pid":         pid,
+			"reason":      "stop_wait_timeout",
+			"duration_ms": waitTimeout.Milliseconds(),
+		}).Warn("shim process did not exit within timeout after termination")
+		return shim.StopStatus{}, fmt.Errorf("shim process %d did not exit within %s after termination", pid, waitTimeout)
 	}
 
 	return shim.StopStatus{
