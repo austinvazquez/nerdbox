@@ -38,6 +38,10 @@ import (
 	"github.com/containerd/containerd/v2/pkg/shim"
 	"github.com/containerd/log"
 	"golang.org/x/sys/windows"
+
+	options "github.com/containerd/nerdbox/api/runtime/options/v1"
+	"github.com/containerd/nerdbox/internal/erofs"
+	"github.com/containerd/nerdbox/pkg/shim/watchdog"
 )
 
 func newCommand(ctx context.Context, id, containerdAddress, containerdTTRPCAddress string, debug bool) (*exec.Cmd, error) {
@@ -121,6 +125,17 @@ func (manager) Start(ctx context.Context, bparams *bootapi.BootstrapParams) (_ *
 	// The shim's serveListener reads TTRPC_SOCKET to know where to listen.
 	cmd.Env = append(cmd.Env, "TTRPC_SOCKET="+address)
 
+	if opts, err := watchdogOptions(bparams); err != nil {
+		log.G(ctx).WithError(err).Warn("failed to read watchdog runtime options; using defaults")
+	} else if opts != nil {
+		switch {
+		case opts.GetDisableWatchdog():
+			cmd.Env = append(cmd.Env, watchdog.EnvDisable+"=1")
+		case opts.GetWatchdogTimeout().AsDuration() > 0:
+			cmd.Env = append(cmd.Env, watchdog.EnvTimeout+"="+opts.GetWatchdogTimeout().AsDuration().String())
+		}
+	}
+
 	if err := cmd.Start(); err != nil {
 		return nil, err
 	}
@@ -164,6 +179,13 @@ const (
 	shimPipeReadyTimeout   = 10 * time.Second
 	shimPipeDialPerAttempt = 1 * time.Second
 	shimPipeRetryDelay     = 10 * time.Millisecond
+
+	// bundleRemoveWindow bounds removeBundleArtifacts' retry loop, so a shim
+	// that never releases a locked artifact doesn't hold this call open
+	// forever: log the survivors and move on rather than retry
+	// indefinitely.
+	bundleRemoveWindow     = 1 * time.Second
+	bundleRemoveRetryDelay = 200 * time.Millisecond
 )
 
 // waitForShimPipe polls a named pipe address with a short per-attempt DialPipe timeout
@@ -254,6 +276,22 @@ func waitForShimPipe(ctx context.Context, address string, shimExit <-chan error,
 	}
 }
 
+// watchdogOptions extracts *options.Options from bparams.Extensions, set by
+// containerd from the sandbox/container's configured runtime options (see
+// api/runtime/options/v1). Returns (nil, nil) if the caller never set one —
+// an absent extension is the common case, not an error.
+func watchdogOptions(bparams *bootapi.BootstrapParams) (*options.Options, error) {
+	var opts options.Options
+	found, err := bparams.FindExtension(&opts)
+	if err != nil {
+		return nil, err
+	}
+	if !found {
+		return nil, nil
+	}
+	return &opts, nil
+}
+
 // bundlePath extracts the bundle path from the context. The shim framework
 // stores it as shim.Opts{BundlePath: ...} via the -bundle flag.
 func bundlePath(ctx context.Context) string {
@@ -263,23 +301,70 @@ func bundlePath(ctx context.Context) string {
 	return ""
 }
 
-// removeRootfs removes the rootfs directory from the bundle so that
-// containerd's bundle cleanup doesn't attempt a bind filter unmount.
-// On Windows, Unmount calls bindfilter.RemoveFileBinding which fails with
-// ERROR_ACCESS_DENIED on directories that were never bind filter mounts
-// (nerdbox uses VM-based virtio block devices instead). Removing the
-// directory makes UnmountAll a no-op.
-func removeRootfs(ctx context.Context) {
-	if bp := bundlePath(ctx); bp != "" {
-		os.RemoveAll(filepath.Join(bp, "rootfs"))
+// removeBundleArtifacts removes everything the shim itself put in the bundle
+// directory, leaving containerd's own bundle cleanup nothing to trip over. Two
+// Windows failure modes make it necessary: Unmount calls
+// bindfilter.RemoveFileBinding, which fails with ERROR_ACCESS_DENIED on a rootfs
+// that was never a bind filter mount (nerdbox uses virtio block devices
+// instead), and a VMDK extent still mapped by the VM cannot be unlinked at all —
+// see [erofs.IsBundleArtifact].
+func removeBundleArtifacts(ctx context.Context) {
+	bp := bundlePath(ctx)
+	if bp == "" {
+		return
+	}
+
+	targets := []string{filepath.Join(bp, "rootfs")}
+	entries, err := os.ReadDir(bp)
+	if err != nil {
+		log.G(ctx).WithError(err).WithField("bundle", bp).
+			Error("failed to list bundle directory; shim-written artifacts may be left behind")
+	}
+	for _, entry := range entries {
+		if erofs.IsBundleArtifact(entry.Name()) {
+			targets = append(targets, filepath.Join(bp, entry.Name()))
+		}
+	}
+
+	// A shim being terminated can hold its mappings for a moment after
+	// TerminateProcess returns, so retry — but over the whole remaining set
+	// under one deadline. Retrying per target would multiply by the target
+	// count and could push this call past containerd's cleanup timeout, which
+	// is the very failure being fixed.
+	deadline := time.Now().Add(bundleRemoveWindow)
+	if dl, ok := ctx.Deadline(); ok && dl.Before(deadline) {
+		deadline = dl
+	}
+
+	var failures map[string]error
+	for {
+		var remaining []string
+		failures = make(map[string]error, len(targets))
+		for _, target := range targets {
+			if err := os.RemoveAll(target); err != nil {
+				failures[target] = err
+				remaining = append(remaining, target)
+			}
+		}
+		targets = remaining
+		if len(targets) == 0 || time.Until(deadline) <= bundleRemoveRetryDelay {
+			break
+		}
+		time.Sleep(bundleRemoveRetryDelay)
+	}
+
+	// Name the survivors: this is the file that will wedge subsequent starts.
+	for _, target := range targets {
+		log.G(ctx).WithError(failures[target]).WithField("path", target).
+			Error("failed to remove bundle artifact; containerd bundle cleanup and subsequent starts of this container will fail until it is released")
 	}
 }
 
 func (manager) Stop(ctx context.Context, id string) (shim.StopStatus, error) {
 	// must run on all exits (including when the process is already gone)
-	// to ensure containerd's bundle cleanup is successful. See [removeRootfs]
-	// for more details.
-	defer removeRootfs(ctx)
+	// to ensure containerd's bundle cleanup is successful. See
+	// [removeBundleArtifacts] for more details.
+	defer removeBundleArtifacts(ctx)
 
 	p, err := os.ReadFile(filepath.Join(bundlePath(ctx), "shim.pid"))
 	if err != nil {
@@ -319,6 +404,30 @@ func (manager) Stop(ctx context.Context, id string) (shim.StopStatus, error) {
 	}
 	defer windows.CloseHandle(h)
 
+	// Best-effort: tell pid's watchdog.Listen goroutine (if any) that it is
+	// about to be killed, so it can capture a goroutine dump and, if
+	// TerminateProcess/the OS's own teardown doesn't finish it off first,
+	// self-terminate. A no-op if the shim never called Listen. See
+	// [watchdog] for why this exists — a thread wedged deep in a
+	// hypervisor call can leave this same class of hang with no way to
+	// diagnose it from the outside, since TerminateProcess never runs any
+	// code in the target process. Arm's own error (as opposed to "no such
+	// event", which is the expected case whenever pid never called Listen)
+	// is worth logging, but not worth failing Stop over.
+	//
+	// This is also what makes it safe for the wait below to stay
+	// unbounded: if TerminateProcess alone can't bring a wedged shim down
+	// because a thread is parked in a hypervisor call, the watchdog inside
+	// that process observes the same arm signal and self-terminates it
+	// independently of whatever happens to this call. If containerd's own
+	// io.containerd.timeout.shim.cleanup fires and kills this `shim
+	// delete` invocation before that finishes, containerd retries the
+	// delete later; by then the process is actually gone, so that retry's
+	// Stop clears the bundle instead.
+	if err := watchdog.Arm(pid); err != nil {
+		log.G(ctx).WithError(err).WithField("pid", pid).Warn("failed to arm shim watchdog")
+	}
+
 	// Terminate the shim. ERROR_ACCESS_DENIED is returned when the process
 	// has already exited but the handle is still open; WaitForSingleObject
 	// below will return immediately in that case.
@@ -327,8 +436,9 @@ func (manager) Stop(ctx context.Context, id string) (shim.StopStatus, error) {
 	}
 
 	// Block until the process has fully exited. There is no timeout: the
-	// shim is the only target and TerminateProcess is unconditional, so
-	// WaitForSingleObject will always complete.
+	// shim is the only target, and between TerminateProcess and the
+	// watchdog armed above, it always ends up dead. See the watchdog.Arm
+	// comment above for why this can stay unbounded now.
 	if _, err := windows.WaitForSingleObject(h, windows.INFINITE); err != nil {
 		return shim.StopStatus{}, fmt.Errorf("wait for shim process: %w", err)
 	}
