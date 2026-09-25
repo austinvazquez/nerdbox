@@ -28,7 +28,46 @@ import (
 	"time"
 
 	winio "github.com/Microsoft/go-winio"
+	bootapi "github.com/containerd/containerd/api/runtime/bootstrap/v1"
+	"google.golang.org/protobuf/types/known/durationpb"
+
+	options "github.com/containerd/nerdbox/api/runtime/options/v1"
 )
+
+func TestWatchdogOptionsAbsent(t *testing.T) {
+	opts, err := watchdogOptions(&bootapi.BootstrapParams{})
+	if err != nil {
+		t.Fatalf("watchdogOptions() error = %v", err)
+	}
+	if opts != nil {
+		t.Fatalf("watchdogOptions() = %+v, want nil for a BootstrapParams with no extension", opts)
+	}
+}
+
+func TestWatchdogOptionsPresent(t *testing.T) {
+	want := &options.Options{
+		DisableWatchdog: true,
+		WatchdogTimeout: durationpb.New(45 * time.Second),
+	}
+	bparams := &bootapi.BootstrapParams{}
+	if err := bparams.AddExtension(want); err != nil {
+		t.Fatalf("AddExtension() error = %v", err)
+	}
+
+	got, err := watchdogOptions(bparams)
+	if err != nil {
+		t.Fatalf("watchdogOptions() error = %v", err)
+	}
+	if got == nil {
+		t.Fatal("watchdogOptions() = nil, want the extension that was added")
+	}
+	if got.GetDisableWatchdog() != want.GetDisableWatchdog() {
+		t.Errorf("DisableWatchdog = %v, want %v", got.GetDisableWatchdog(), want.GetDisableWatchdog())
+	}
+	if got.GetWatchdogTimeout().AsDuration() != want.GetWatchdogTimeout().AsDuration() {
+		t.Errorf("WatchdogTimeout = %v, want %v", got.GetWatchdogTimeout().AsDuration(), want.GetWatchdogTimeout().AsDuration())
+	}
+}
 
 // testPipeAddr returns a unique named pipe address for a test.
 func testPipeAddr(t *testing.T) string {
