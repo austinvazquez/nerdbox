@@ -1,0 +1,41 @@
+/*
+	Copyright The containerd Authors.
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
+syntax = "proto3";
+
+package containerd.nerdbox.runtime.options.v1;
+
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/containerd/nerdbox/api/runtime/options/v1;options";
+
+// Options carries per-sandbox runtime configuration for the nerdbox shim,
+// set via the container/sandbox's runtime options (containerd's
+// WithRuntime) and threaded down to the shim manager's Start through
+// BootstrapParams.Extensions (see pkg/shim/manager and pkg/shim/watchdog).
+message Options {
+	// disable_watchdog turns off the Windows shutdown watchdog
+	// (pkg/shim/watchdog) for this sandbox's shim. Unset (false) leaves it
+	// enabled, which is the default.
+	bool disable_watchdog = 1;
+
+	// watchdog_timeout overrides watchdog.Timeout for this sandbox's shim:
+	// how long the watchdog waits, once armed by manager.Stop, before
+	// concluding the process is unrecoverably wedged and terminating it.
+	// Unset (zero) keeps the package default. Ignored if disable_watchdog
+	// is true.
+	google.protobuf.Duration watchdog_timeout = 2;
+}

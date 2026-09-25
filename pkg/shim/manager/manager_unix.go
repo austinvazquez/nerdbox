@@ -327,6 +327,13 @@ func waitForShimPidLock() (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	// Reject non-positive pids before they reach Kill: kill(0) signals every
+	// process in the caller's process group and kill(-n) a whole other group,
+	// so a truncated or zeroed shim.pid would take down the `shim delete`
+	// invocation (and whatever else shares its group) instead of the shim.
+	if pid <= 0 {
+		return 0, fmt.Errorf("invalid shim pid %d in shim.pid", pid)
+	}
 
 	// Try a non-blocking acquire first. If it succeeds the shim has already
 	// exited and the lock is free.
@@ -343,7 +350,7 @@ func waitForShimPidLock() (int, error) {
 		return 0, fmt.Errorf("kill shim: %w", kerr)
 	}
 	if err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX); err != nil {
-		return 0, fmt.Errorf("flock shim.pid (wait): %w", err)
+		return 0, fmt.Errorf("flock shim.pid: %w", err)
 	}
 	return pid, nil
 }
